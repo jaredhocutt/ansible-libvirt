@@ -1,0 +1,26 @@
+---
+
+- name: Install required packages
+  dnf:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "@virtualization"
+    - qemu-img
+  become: yes
+
+- name: Start and enable libvirtd
+  service:
+    name: libvirtd
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Apply polkit policy for libvirt
+  template:
+    src: 00-libvirt.rules.j2
+    dest: /etc/polkit-1/rules.d/00-libvirt.rules
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
