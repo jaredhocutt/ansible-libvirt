@@ -24,3 +24,13 @@
     group: root
     mode: 0644
   become: yes
+
+- name: Give the {{ ansible_user }} access to the libvirt images
+  acl:
+    path: "/var/lib/libvirt/images"
+    entity: "{{ ansible_user }}"
+    etype: user
+    permissions: rwx
+    follow: yes
+    state: present
+  become: yes
